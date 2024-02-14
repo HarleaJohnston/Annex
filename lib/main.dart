@@ -13,8 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: appTitle,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
-            .copyWith(secondary: Colors.amber),
+
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff304132)),
+        useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Annex'),
     );
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
+
 
   final String title;
 
