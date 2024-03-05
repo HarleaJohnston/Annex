@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
             .copyWith(secondary: Colors.amber),
       ),
-      home: const Login(),
+      home: Login(),
     );
   }
 }
