@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'profile.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _Home();
+  State<Home> createState() => _HomeState();
 }
 
 Container buildLibraryCard(String libraryItemType) {
@@ -31,13 +29,16 @@ Container buildLibraryCard(String libraryItemType) {
   );
 }
 
-class _Home extends State<Home> {
+class _HomeState extends State<Home> {
   int _currentIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Row(
+          children: [],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -130,9 +131,19 @@ class _Home extends State<Home> {
             label: "Profile",
           ),
         ],
-        onTap: (value) => {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Profile()))
+        onTap: (value) {
+          if (value == 2) {
+            // Navigate to Profile page and pass email
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Profile(),
+              ),
+            );
+          }
+          setState(() {
+            _currentIndex = value;
+          });
         },
       ),
     );

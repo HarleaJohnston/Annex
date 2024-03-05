@@ -1,23 +1,39 @@
-import 'package:annex/login.dart';
-import 'package:annex/main.dart';
+import 'package:annex/home.dart';
 import 'package:flutter/material.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo_dart;
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void createUser() async {
+    var db = mongo_dart.Db('mongodb://localhost:27017/dart_DB');
+    var collection = db.collection('users');
+
+    try {
+      await db.open();
+      await collection.insertOne({
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      });
+      print('User added!');
+    } catch (e) {
+      print('Error adding user: $e');
+    } finally {
+      await db.close();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
-        actions: [
-          BackButton(onPressed: () => {Navigator.pop(context)})
-        ],
+        title: Text('Sign Up'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -25,12 +41,14 @@ class _SignUpState extends State<SignUp> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
+              controller: _passwordController,
               decoration: InputDecoration(
                 labelText: 'Password',
               ),
@@ -38,17 +56,22 @@ class _SignUpState extends State<SignUp> {
             ),
             SizedBox(height: 32.0),
             ElevatedButton(
-              onPressed: () => {
+              onPressed: () {
+                createUser();
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => MyApp()))
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Home(),
+                  ),
+                );
               },
               child: Text('Sign Up'),
             ),
             SizedBox(height: 16.0),
             TextButton(
-              onPressed: () => {
+              onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Login()))
+                    context, MaterialPageRoute(builder: (context) => Home()));
               },
               child: Text('Login'),
             ),

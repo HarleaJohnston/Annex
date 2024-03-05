@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Profile extends StatelessWidget {
+  Profile();
 
-  @override
-  _ProfileState createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,20 +13,6 @@ class _ProfileState extends State<Profile> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/profile_image.jpg'),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'John Doe',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'john.doe@example.com',
-              style: TextStyle(fontSize: 18),
-            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -60,7 +41,10 @@ class _ProfileState extends State<Profile> {
         ],
         onTap: (index) {
           if (index == 0) {
-          } else if (index == 1) {}
+            // Navigate to Library page
+          } else if (index == 1) {
+            // Navigate to Home page
+          }
         },
       ),
     );
