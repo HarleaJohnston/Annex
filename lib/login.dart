@@ -13,44 +13,45 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void loginUser() async {
-    var db = mongo_dart.Db('mongodb://localhost:27017/dart_DB');
-    var collection = db.collection('users');
+void loginUser() async {
+  var db = mongo_dart.Db('mongodb://127.0.0.1:27017/dart_DB');
+  var collection = db.collection('users');
+  bool loginSuccess = false;
 
-    await db.open();
-    var user = await collection.findOne({'email': _emailController.text});
-    await db.close();
+  await db.open();
+  var user = await collection.findOne({'email': _emailController.text});
+  await db.close();
 
-    // Check if user exists and password matches
-    if (user != null && user['password'] == _passwordController.text) {
-      // Navigate to home page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Home(),
-        ),
-      );
-    } else {
-      // Show error message
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Invalid email or password'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  if (user != null && user['password'] == _passwordController.text) {
+    loginSuccess = true;
   }
+  if (loginSuccess) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Home(),
+      ),
+    );
+  } else {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Invalid email or password'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -81,19 +82,12 @@ class _LoginState extends State<Login> {
             ElevatedButton(
               onPressed: () {
                 loginUser();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Home(),
-                  ),
-                );
               },
               child: Text('Login'),
             ),
             SizedBox(height: 16.0),
             TextButton(
               onPressed: () {
-                // Navigate to sign up page
                 Navigator.push(
                   context,
                   MaterialPageRoute(
