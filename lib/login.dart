@@ -14,8 +14,10 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
 
 void loginUser() async {
-  var db = mongo_dart.Db('mongodb://127.0.0.1:27017/dart_DB');
-  var collection = db.collection('users');
+    var db = await mongo_dart.Db.create(
+      "mongodb+srv://johnstonharlea:I62V4Lsg3tjSkxzC@cluster0.ryaxisq.mongodb.net/dart_DB?retryWrites=true&w=majority&appName=Cluster0");
+    await db.open(secure: true);
+    var collection = db.collection('users');
   bool loginSuccess = false;
 
   await db.open();

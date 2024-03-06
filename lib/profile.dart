@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'libs.dart';
+import 'home.dart';
 
-class Profile extends StatelessWidget {
-  Profile();
+class Profile extends StatefulWidget {
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +32,11 @@ class Profile extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2, // set the current index to the profile page
+        currentIndex: _currentIndex,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.library_books),
-            label: "Library",
+            label: "Libraries",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -39,12 +47,34 @@ class Profile extends StatelessWidget {
             label: "Profile",
           ),
         ],
-        onTap: (index) {
-          if (index == 0) {
-            // Navigate to Library page
-          } else if (index == 1) {
-            // Navigate to Home page
+        onTap: (value) {
+            if (value == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LibrariesPage(),
+              ),
+            );
           }
+            if (value == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Home(),
+              ),
+            );
+          }
+          if (value == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Profile(),
+              ),
+            );
+          }
+          setState(() {
+            _currentIndex = value;
+          });
         },
       ),
     );

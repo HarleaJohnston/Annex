@@ -1,3 +1,4 @@
+import 'package:annex/signup.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'profile.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
             .copyWith(secondary: Colors.amber),
       ),
-      home: Login(),
+      home: SignUp(),
     );
   }
 }

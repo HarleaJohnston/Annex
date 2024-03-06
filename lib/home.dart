@@ -1,5 +1,8 @@
+import 'package:annex/libs.dart';
 import 'package:flutter/material.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo_dart;
 import 'profile.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -31,6 +34,42 @@ Container buildLibraryCard(String libraryItemType) {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 1;
+  List<Map<String, dynamic>> libraryData1 = [];
+  List<Map<String, dynamic>> libraryData2 = [];
+  List<Map<String, dynamic>> libraryData3 = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+      var db = await mongo_dart.Db.create(
+        "mongodb+srv://johnstonharlea:I62V4Lsg3tjSkxzC@cluster0.ryaxisq.mongodb.net/dart_DB?retryWrites=true&w=majority&appName=Cluster0");
+      await db.open(secure: true);
+
+    // Fetch data from collection 1
+    var collection1 = db.collection('videoGames');
+    await db.open();
+    var data1 = await collection1.find().toList();
+
+    // Fetch data from collection 2
+    var collection2 = db.collection('books');
+    var data2 = await collection2.find().toList();
+
+    // Fetch data from collection 3
+    var collection3 = db.collection('vinyls');
+    var data3 = await collection3.find().toList();
+
+    await db.close();
+
+    setState(() {
+      libraryData1 = data1;
+      libraryData2 = data2;
+      libraryData3 = data3;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,74 +83,9 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Text(
-                "Games:",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  buildLibraryCard("Game 1"),
-                  buildLibraryCard("Game 2"),
-                  buildLibraryCard("Game 3"),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Text(
-                "Books:",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  buildLibraryCard("Book 1"),
-                  buildLibraryCard("Book 2"),
-                  buildLibraryCard("Book 3"),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Text(
-                "Vinyls:",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  buildLibraryCard("Vinyl 1"),
-                  buildLibraryCard("Vinyl 2"),
-                  buildLibraryCard("Vinyl 3"),
-                ],
-              ),
-            ),
+            _buildLibrarySection("Games", libraryData1),
+            _buildLibrarySection("Books", libraryData2),
+            _buildLibrarySection("Vinyls", libraryData3),
           ],
         ),
       ),
@@ -132,8 +106,23 @@ class _HomeState extends State<Home> {
           ),
         ],
         onTap: (value) {
+            if (value == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LibrariesPage(),
+              ),
+            );
+          }
+            if (value == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Home(),
+              ),
+            );
+          }
           if (value == 2) {
-            // Navigate to Profile page and pass email
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -146,6 +135,35 @@ class _HomeState extends State<Home> {
           });
         },
       ),
+    );
+  }
+
+  Widget _buildLibrarySection(String title, List<Map<String, dynamic>> data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 250,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (var itemData in data)
+                buildLibraryCard(itemData['name']),
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+      ],
     );
   }
 }

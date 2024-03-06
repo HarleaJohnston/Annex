@@ -11,37 +11,36 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late mongo_dart.Db db;
 
-void createUser() async {
-  var db = mongo_dart.Db('mongodb://localhost:27017/dart_DB');
-  var collection = db.collection('users');
-  bool userAdded = false;
-
-  try {
-    await db.open();
-    await collection.insertOne({
-      'email': _emailController.text,
-      'password': _passwordController.text,
-    });
-    print('User added!');
-    userAdded = true;
-  } catch (e) {
-    print('Error adding user: $e');
-  } finally {
+  @override
+  void dispose() async {
+    super.dispose();
     await db.close();
   }
 
-  if (userAdded) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Home(),
-      ),
-    );
-  } else {
-    print('User not added');
+  void createUser() async {
+    //await dbConnecting();
+      var db = await mongo_dart.Db.create(
+        "mongodb+srv://johnstonharlea:I62V4Lsg3tjSkxzC@cluster0.ryaxisq.mongodb.net/dart_DB?retryWrites=true&w=majority&appName=Cluster0");
+      await db.open(secure: true);
+    var collection = db.collection('users');
+    try {
+      await collection.insertOne({
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      });
+      print('User added!');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home(),
+        ),
+      );
+    } catch (e) {
+      print('Error adding user: $e');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +70,7 @@ void createUser() async {
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
+                //await dbConnecting();
                 createUser();
               },
               child: Text('Sign Up'),
