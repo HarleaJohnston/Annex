@@ -8,6 +8,7 @@ class ScanPage extends StatefulWidget {
   _ScanPageState createState() => _ScanPageState();
 }
 
+// to future me work on saving the books and games scanned with this to the DB
 class _ScanPageState extends State<ScanPage> {
   String _itemName = '';
   String _itemDescription = '';
@@ -42,6 +43,7 @@ class _ScanPageState extends State<ScanPage> {
         }
       } else {
         final items = responseData['items'];
+        // used Chat to fix how I was showing items
         if (items != null && items.isNotEmpty) {
           final item = items[0];
           setState(() {

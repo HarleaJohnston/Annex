@@ -8,6 +8,8 @@ class AddItemPage extends StatefulWidget {
   _AddItemPageState createState() => _AddItemPageState();
 }
 
+// Fix how images are saved so we can actually see the images in the database
+
 class _AddItemPageState extends State<AddItemPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
