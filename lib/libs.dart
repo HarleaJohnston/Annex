@@ -1,8 +1,9 @@
+import 'package:annex/scan.dart';
 import 'package:flutter/material.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo_dart;
 import 'package:annex/add.dart';
-import 'home.dart';
-import 'profile.dart';
+import 'package:annex/home.dart';
+import 'package:annex/profile.dart';
 
 class LibrariesPage extends StatefulWidget {
   @override
@@ -81,6 +82,15 @@ class _LibrariesPageState extends State<LibrariesPage> {
             },
             icon: Icon(Icons.add),
           ),
+                    IconButton(
+            onPressed: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScanPage()),
+              );
+            },
+            icon: Icon(Icons.camera), 
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -115,10 +125,15 @@ class _LibrariesPageState extends State<LibrariesPage> {
               context,
               MaterialPageRoute(builder: (context) => Home()),
             );
-          } else if (value == 2) {
+          } if (value == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Profile()),
+            );
+          } if (value == 0){
+              Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LibrariesPage()),
             );
           }
         },
